@@ -40,20 +40,66 @@ bool containsThreePeriods(const std::string& address)
 void testTP(const std::string& addr)
 {
 	bool res = containsThreePeriods(addr);
-	std::cout << "address " << addr << " is" << (res ? "" : " not") << " valid\n";
+	std::cout << "Address " << addr << " is" << (res ? "" : " not") << " valid\n";
 }
 
 
+/// <summary>
+/// This function splits an IP address into substrings that are delimited by periods
+/// </summary>
+/// <param name="address"></param>
+/// <returns>A vector of strings</returns>
+std::vector<std::string> splitAddress(const std::string& address)
+{
+	std::vector<std::string> result{};
+	std::string tempString{};
+	for (const auto& element : address)
+	{
+		if (element != '.')
+		{
+			tempString += element;
+		}
+		else
+		{
+			if (!tempString.empty())
+			{
+				result.push_back(tempString);
+			}
+			tempString.clear();
+		}
+	}
+	if (!tempString.empty())
+	{
+		result.push_back(tempString);
+	}
+	return result;
+}
+
+void testSplit(const std::string& address)
+{
+	std::vector<std::string> result = splitAddress(address);
+	std::cout << "The substring of address " << address << " are ";
+	for (const auto& element : result)
+	{
+		std::cout <<"\"" << element << "\" ";
+	}
+	std::cout << '\n';
+}
 
 int main()
 {
 	std::vector<std::string> addrs = {
 	"1.0.3.4",
 	"1.0.5.6.7",
-	 "1.0.3"
+	 "1.0.3",
+	 "...",
+	 "123.",
+	 ".123"
 	};
 	for (const auto& addr : addrs) {
 		testTP(addr);
+		testSplit(addr);
 	}
+
 	return 0;
 }
