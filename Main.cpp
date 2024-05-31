@@ -13,6 +13,7 @@
 
 //OPTIONAL 1: Modify the program so that is takes an input from the command line
 //OPTIONAL 2: Create a IP address class that takes a string and its constructor and produces a valid IP address object
+//OPTIONAL 3: Using enums, modify the program to print a error message that corresponds to what is invalid about the address (e.g. insufficient periods, insufficient fiellds, wrong field format etc.)
 
 /// <summary>
 /// This function returns true if an address contains exactly 3 periods
@@ -121,6 +122,52 @@ void testConvert(const std::string& addr)
 	std::cout << "\n";
 }
 
+/// <summary>
+/// Checks if an IP address is valid
+/// </summary>
+/// <param name="address"></param>
+/// <returns></returns>
+bool validateAddress(const std::string& address)
+{
+	if (!containsThreePeriods(address))
+	{
+		return false;
+	}
+	auto stringFields{ splitAddress(address) };
+	if (stringFields.size() != 4)
+	{
+		return false;
+	}
+	auto intFields{ convertToInt(stringFields) };
+	if (intFields.size() != 4)
+	{
+		return false;
+	}
+
+	if (intFields[0] < 1 || intFields[0] > 126)
+	{
+		return false;
+	}
+
+	for (const auto& field : intFields)
+	{
+		if (field < 0 || field > 255)
+		{
+			return false;
+		}
+
+	}
+
+	return true;
+
+}
+
+void testValidate(const std::string& addr)
+{
+	bool res = validateAddress(addr);
+	std::cout << "IP address " << addr << " is"<< (res ? "" : " not") << " a valid IP address\n";
+}
+
 int main()
 {
 	std::vector<std::string> addrs = { 
@@ -130,12 +177,14 @@ int main()
 	 "...",
 	 "123.",
 	 ".123",
-	 "123.abc.123"
+	 "123.abc.123",
+	 "0.0.0.0"
 	};
 	for (const auto& addr : addrs) {
 		testTP(addr);
 		testSplit(addr);
 		testConvert(addr);
+		testValidate(addr);
 	}
 
 	return 0;
