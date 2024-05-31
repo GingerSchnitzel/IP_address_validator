@@ -86,19 +86,56 @@ void testSplit(const std::string& address)
 	std::cout << '\n';
 }
 
+/// <summary>
+/// Converts a vector of strings into a vector of integers (when possible)
+/// </summary>
+/// <param name="fields"></param>
+/// <returns></returns>
+std::vector<int32_t> convertToInt(const std::vector<std::string>& fields)
+{
+	std::vector<int32_t> result{};
+	for (const auto& field : fields)
+	{
+		try
+		{
+			int32_t number{ std::stoi(field) };
+			result.push_back(number);
+			
+		}
+		catch (...)
+		{
+
+		}
+	}
+	return result;
+}
+
+
+void testConvert(const std::string& addr) 
+{
+	std::cout << "The integer fields of address " << addr << " are ";
+	for (const auto& num : convertToInt(splitAddress(addr)))
+	{
+		std::cout << num << " ";
+	}
+	std::cout << "\n";
+}
+
 int main()
 {
-	std::vector<std::string> addrs = {
+	std::vector<std::string> addrs = { 
 	"1.0.3.4",
 	"1.0.5.6.7",
 	 "1.0.3",
 	 "...",
 	 "123.",
-	 ".123"
+	 ".123",
+	 "123.abc.123"
 	};
 	for (const auto& addr : addrs) {
 		testTP(addr);
 		testSplit(addr);
+		testConvert(addr);
 	}
 
 	return 0;
